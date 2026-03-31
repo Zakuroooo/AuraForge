@@ -151,7 +151,7 @@ function GalleryImageCard({
             minute: "2-digit",
           })}
         </p>
-        <div className="flex flex-wrap gap-3 transition-all duration-300 lg:opacity-0 lg:translate-y-4 lg:group-hover:opacity-100 lg:group-hover:translate-y-0">
+        <div className="flex flex-wrap gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">
           <button
             type="button"
             onClick={() => onDownload(image)}
@@ -399,7 +399,7 @@ export default function GalleryPage() {
         // GRID.SYNC :: HOLO_LAYER_ENABLED
       </div>
       <div className="pointer-events-none absolute bottom-0 left-0 h-[50vh] w-full origin-bottom bg-[linear-gradient(to_right,#22d3ee15_1px,transparent_1px),linear-gradient(to_bottom,#22d3ee15_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:linear-gradient(to_bottom,transparent,black)] [transform:perspective(1000px)_rotateX(60deg)_translateZ(0)]" />
-      <div className="relative z-10 mx-auto flex w-full max-w-[1700px] flex-col gap-10 lg:flex-row lg:px-10">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1700px] flex-col gap-10 lg:flex-row px-10">
         <section className="w-full lg:sticky lg:top-10 lg:max-h-[calc(100vh-5rem)] lg:w-[380px] lg:pr-8">
           <div className="rounded-3xl border-r border-white/[0.05] bg-white/[0.02] p-8 backdrop-blur-xl">
             <p className="flex items-center gap-3 text-sm font-sans text-white tracking-tight">

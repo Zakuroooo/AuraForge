@@ -81,7 +81,8 @@ export default function ProfilePage() {
             : null;
         const normalizedProfile = {
           ...data,
-          avatarUrl: data.avatarUrl ?? data.avatar_url ?? storedAvatar ?? undefined,
+          avatarUrl:
+            data.avatarUrl ?? data.avatar_url ?? storedAvatar ?? undefined,
         };
         setProfile(normalizedProfile);
         setEditUsername(normalizedProfile.username ?? "");
@@ -202,7 +203,8 @@ export default function ProfilePage() {
           : null;
       const normalizedProfile = {
         ...data,
-        avatarUrl: data.avatarUrl ?? data.avatar_url ?? storedAvatar ?? undefined,
+        avatarUrl:
+          data.avatarUrl ?? data.avatar_url ?? storedAvatar ?? undefined,
       };
       setProfile(normalizedProfile);
       if (normalizedProfile.avatarUrl && typeof window !== "undefined") {
@@ -315,7 +317,7 @@ export default function ProfilePage() {
           ) : null}
 
           {isLoadingImages ? (
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-4 pb-24">
+            <div className="w-full grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-4 pb-24">
               {Array.from({ length: 4 }).map((_, index) => (
                 <div
                   key={`vault-skeleton-${index}`}
@@ -328,7 +330,7 @@ export default function ProfilePage() {
               <p className={hudLabelClass}>SYSTEM_MESSAGE: VAULT_EMPTY</p>
             </div>
           ) : (
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-4 pb-24">
+            <div className="w-full grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-4 pb-24">
               {vaultImages.map((image) => (
                 <article
                   key={image.id}
