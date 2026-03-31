@@ -306,7 +306,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-black via-[#05050a] to-[#0a0a16] px-6 py-24 text-white sm:px-12">
+    <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-black via-[#05050a] to-[#0a0a16] px-10 py-24 text-white lg:px-32">
       <div className="pointer-events-none absolute inset-0 -z-10">
         <motion.div
           className="absolute inset-0 opacity-80"
@@ -366,7 +366,7 @@ export default function Home() {
         ref={heroRef}
         onMouseMove={handleHeroMove}
         onMouseLeave={handleHeroLeave}
-        className="relative z-20 mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]"
+        className="relative z-20 mx-auto grid w-full max-w-[1600px] items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]"
       >
         <div className="order-1 flex w-full justify-center lg:order-2">
           <motion.div
@@ -520,7 +520,7 @@ export default function Home() {
       </div>
 
       <section className="relative z-20 mt-24">
-        <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-3">
+        <div className="mx-auto grid w-full max-w-[1600px] gap-6 md:grid-cols-3">
           {valueProps.map((item) => {
             return (
               <div
@@ -544,7 +544,7 @@ export default function Home() {
 
       <section className="relative z-20 mt-20 overflow-hidden">
         <div
-          className="mx-auto w-full max-w-6xl"
+          className="mx-auto w-full max-w-[1600px]"
           style={{
             maskImage:
               "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",

@@ -234,7 +234,7 @@ export default function ProfilePage() {
         aria-hidden
       />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-2xl flex-col items-center text-center py-20 gap-12">
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center text-center py-20 gap-12">
         <div className="flex flex-col items-center gap-6">
           <div className="relative">
             <div
@@ -315,7 +315,7 @@ export default function ProfilePage() {
           ) : null}
 
           {isLoadingImages ? (
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4 pb-24">
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-4 pb-24">
               {Array.from({ length: 4 }).map((_, index) => (
                 <div
                   key={`vault-skeleton-${index}`}
@@ -328,7 +328,7 @@ export default function ProfilePage() {
               <p className={hudLabelClass}>SYSTEM_MESSAGE: VAULT_EMPTY</p>
             </div>
           ) : (
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4 pb-24">
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-4 pb-24">
               {vaultImages.map((image) => (
                 <article
                   key={image.id}
