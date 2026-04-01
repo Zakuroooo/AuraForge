@@ -26,6 +26,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000", 
         "http://localhost:3001", 
+        "https://aura-forge-nine.vercel.app",
         os.getenv("FRONTEND_BASE_URL", "https://your-frontend.vercel.app")
     ],
     allow_credentials=True,
