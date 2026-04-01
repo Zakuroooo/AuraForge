@@ -9,7 +9,7 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, Variants } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Inter } from "next/font/google";
 
@@ -18,7 +18,7 @@ const inter = Inter({
   weight: ["400", "500", "600", "700", "800"],
 });
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
 };
@@ -26,14 +26,14 @@ const fadeUp = {
 const tiltSpringConfig = { damping: 15, stiffness: 150, mass: 0.1 };
 const springConfig = { damping: 20, stiffness: 250, mass: 0.2 };
 
-const headingContainer = {
+const headingContainer: Variants = {
   hidden: {},
   visible: {
     transition: { staggerChildren: 0.12, delayChildren: 0.15 },
   },
 };
 
-const headingWord = {
+const headingWord: Variants = {
   hidden: { opacity: 0, y: 18 },
   visible: {
     opacity: 1,

@@ -2,16 +2,16 @@
 
 import Link from "next/link";
 import { ChangeEvent, FormEvent, Suspense, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { LockKeyhole } from "lucide-react";
 
 import BackgroundBeams from "@/components/BackgroundBeams";
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 48 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" as const } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" } },
 };
 
 const spaceGrotesk = Space_Grotesk({

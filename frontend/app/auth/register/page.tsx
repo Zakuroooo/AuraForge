@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { ArrowRight, Eye, EyeOff } from "lucide-react";
@@ -9,9 +9,9 @@ import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import BackgroundBeams from "@/components/BackgroundBeams";
 import api from "@/lib/api";
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 48 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" as const } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" } },
 };
 
 const spaceGrotesk = Space_Grotesk({

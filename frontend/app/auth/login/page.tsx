@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ChangeEvent, FormEvent, useState } from "react";
-import { motion } from "framer-motion";
+import { ChangeEvent, FormEvent, Suspense, useState } from "react";
+import { motion, Variants } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { Eye, EyeOff } from "lucide-react";
@@ -10,9 +10,9 @@ import Cookies from "js-cookie";
 import BackgroundBeams from "@/components/BackgroundBeams";
 import api from "@/lib/api";
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 48 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" as const } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" } },
 };
 
 const spaceGrotesk = Space_Grotesk({
@@ -25,7 +25,7 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500", "600"],
 });
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const params = useSearchParams();
   const resetMessage = params.get("message");
@@ -182,5 +182,19 @@ export default function LoginPage() {
         </p>
       </motion.section>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#0a0a16] text-white flex items-center justify-center font-mono text-sm">
+          Loading Studio...
+        </div>
+      }
+    >
+      <LoginContent />
+    </Suspense>
   );
 }
