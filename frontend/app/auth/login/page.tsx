@@ -12,7 +12,7 @@ import api from "@/lib/api";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 48 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" as const } },
 };
 
 const spaceGrotesk = Space_Grotesk({
