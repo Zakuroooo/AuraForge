@@ -1,0 +1,49 @@
+# ─── Environment Files (NEVER commit these) ───
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+backend/.env
+frontend/.env.local
+frontend/.env
+
+# ─── Python ───
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+
+# ─── Node ───
+node_modules/
+.next/
+out/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ─── Local uploads (never push to GitHub) ───
+backend/uploads/
+
+# ─── OS ───
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+
+# ─── IDE ───
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ─── Logs ───
+*.log
+logs/

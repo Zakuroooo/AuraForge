@@ -18,9 +18,9 @@ router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 # Load your new Hugging Face token
-HF_TOKEN = os.getenv("HF_TOKEN")
+HF_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")
 # Using the flagship Stable Diffusion XL model
-HF_API_URL = "https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-xl-base-1.0"
+HF_API_URL = os.getenv("HUGGINGFACE_MODEL_URL", "https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-xl-base-1.0")
 
 
 class SaveImageRequest(BaseModel):

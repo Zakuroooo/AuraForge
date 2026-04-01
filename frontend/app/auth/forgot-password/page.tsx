@@ -23,7 +23,7 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500", "600"],
 });
 
-const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8001";
+const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -115,7 +115,7 @@ export default function ForgotPasswordPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`${spaceGrotesk.className} w-full mt-6 flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 py-3.5 text-white text-sm font-bold uppercase tracking-widest transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60`}
+            className={`${spaceGrotesk.className} w-full mt-6 flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 py-3.5 min-h-[44px] lg:min-h-0 text-white text-sm font-bold uppercase tracking-widest transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60`}
           >
             <MailCheck className="h-5 w-5" />
             {isSubmitting ? "Sending" : "Send Reset Link"}

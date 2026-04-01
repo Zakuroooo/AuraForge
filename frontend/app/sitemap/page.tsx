@@ -1,7 +1,19 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
 export default function SiteMap() {
+  const router = useRouter();
   return (
     <div className="min-h-screen bg-[#0a0a16] text-gray-300 pt-32 pb-24 px-6 relative z-10">
       <div className="max-w-3xl mx-auto backdrop-blur-xl bg-white/[0.02] border border-white/10 p-10 md:p-16 rounded-3xl shadow-2xl">
+        <button
+          onClick={() => router.back()}
+          className="mb-8 flex items-center gap-2 font-mono text-xs text-white/40 hover:text-cyan-400 transition-colors duration-200 min-h-[44px] py-2 lg:py-0"
+        >
+          <span>←</span>
+          <span>[ BACK ]</span>
+        </button>
         <h1 className="text-3xl font-bold uppercase tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500 mb-8">
           Site Map
         </h1>

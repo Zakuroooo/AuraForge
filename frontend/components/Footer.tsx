@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="w-full bg-[#05050A] border-t border-white/[0.05] relative z-50">
-      <div className="max-w-7xl mx-auto px-6 pt-16 pb-40 grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div className="max-w-7xl mx-auto px-6 pt-16 pb-16 md:pb-40 grid grid-cols-1 md:grid-cols-3 gap-12">
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-3">
             <div className="relative w-10 h-10 rounded-full overflow-hidden border border-cyan-500/30 shadow-[0_0_15px_rgba(34,211,238,0.3)]">
@@ -12,6 +12,7 @@ export default function Footer() {
                 src="/auraforge-logo.png"
                 alt="AuraForge Neural Core"
                 fill
+                sizes="40px"
                 className="object-cover"
               />
             </div>

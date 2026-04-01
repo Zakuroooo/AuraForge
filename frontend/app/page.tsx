@@ -306,7 +306,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-black via-[#05050a] to-[#0a0a16] px-10 py-24 text-white lg:px-32">
+    <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-black via-[#05050a] to-[#0a0a16] px-4 py-24 text-white sm:px-10 lg:px-32">
       <div className="pointer-events-none absolute inset-0 -z-10">
         <motion.div
           className="absolute inset-0 opacity-80"
@@ -368,7 +368,7 @@ export default function Home() {
         onMouseLeave={handleHeroLeave}
         className="relative z-20 mx-auto grid w-full max-w-[1600px] items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]"
       >
-        <div className="order-1 flex w-full justify-center lg:order-2">
+        <div className="hidden lg:flex order-1 w-full justify-center lg:order-2">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -429,7 +429,7 @@ export default function Home() {
           </motion.div>
         </div>
 
-        <div className="order-2 text-left lg:order-1">
+        <div className="order-2 text-center lg:text-left lg:order-1">
           <motion.div
             initial="hidden"
             animate="visible"
@@ -489,7 +489,7 @@ export default function Home() {
             animate="visible"
             transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
             variants={fadeUp}
-            className="mt-8 flex flex-wrap items-center gap-6"
+            className="mt-8 flex flex-wrap items-center justify-center gap-6 lg:justify-start"
           >
             <MagneticLink href="/auth/login">
               Get Started
@@ -505,7 +505,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="pointer-events-none absolute bottom-[-140px] left-1/2 z-0 h-72 w-[120%] -translate-x-1/2 opacity-45">
+      <div className="pointer-events-none absolute bottom-0 lg:bottom-[-140px] left-1/2 z-0 h-72 w-[120%] -translate-x-1/2 opacity-45">
         <div
           className="h-full w-full"
           style={{

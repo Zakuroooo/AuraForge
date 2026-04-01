@@ -4,7 +4,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Eye, EyeOff } from "lucide-react";
 
 import BackgroundBeams from "@/components/BackgroundBeams";
 import api from "@/lib/api";
@@ -29,6 +29,24 @@ export default function RegisterPage() {
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const getPasswordStrength = (pwd: string): number => {
+    if (pwd.length === 0) return 0;
+    let score = 0;
+    if (pwd.length >= 6) score++;
+    if (/\d/.test(pwd)) score++;
+    if (/[A-Z]/.test(pwd)) score++;
+    if (/[^A-Za-z0-9]/.test(pwd)) score++;
+    return score;
+  };
+
+  const strengthMeta = [
+    { label: "WEAK",    color: "bg-red-500" },
+    { label: "FAIR",    color: "bg-orange-400" },
+    { label: "STRONG",  color: "bg-yellow-400" },
+    { label: "MAXIMUM", color: "bg-emerald-400" },
+  ];
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -97,12 +115,6 @@ export default function RegisterPage() {
                 field: "email",
                 placeholder: "you@auraforge.studio",
               },
-              {
-                label: "Password",
-                type: "password",
-                field: "password",
-                placeholder: "••••••••",
-              },
             ] as const
           ).map(({ label, type, field, placeholder }) => (
             <label key={field} className="group flex flex-col gap-2 text-sm">
@@ -125,6 +137,63 @@ export default function RegisterPage() {
             </label>
           ))}
 
+          {/* Password field with show/hide toggle + strength meter */}
+          <label className="group flex flex-col gap-2 text-sm">
+            <span
+              className={`${jetbrainsMono.className} block text-xs font-medium text-gray-400 mb-2 uppercase tracking-wide`}
+            >
+              Password
+            </span>
+            <div className="relative">
+              <input
+                required
+                type={showPassword ? "text" : "password"}
+                value={form.password}
+                onChange={handleChange("password")}
+                placeholder="••••••••"
+                className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 pr-10 text-white placeholder-gray-600 outline-none transition-all duration-300 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-cyan-500/30 focus:shadow-[0_0_20px_rgba(34,211,238,0.2)] focus:bg-black/80"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-cyan-400 transition-colors"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+              <span className="pointer-events-none absolute inset-0 rounded-xl border border-white/5 opacity-0 blur-xl transition group-focus-within:opacity-100" />
+            </div>
+            {/* Strength meter */}
+            {form.password.length > 0 && (() => {
+              const score = getPasswordStrength(form.password);
+              const meta = strengthMeta[score - 1];
+              return (
+                <div className="mt-2 flex flex-col gap-1.5">
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4].map((bar) => (
+                      <div
+                        key={bar}
+                        className={`h-1 flex-1 rounded-full transition-all duration-300 ${
+                          bar <= score ? meta.color : "bg-white/10"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span
+                    className={`font-mono text-[10px] uppercase tracking-widest ${
+                      score === 1 ? "text-red-500" :
+                      score === 2 ? "text-orange-400" :
+                      score === 3 ? "text-yellow-400" :
+                      "text-emerald-400"
+                    }`}
+                  >
+                    {meta?.label}
+                  </span>
+                </div>
+              );
+            })()}
+          </label>
+
           {error ? (
             <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-xs uppercase tracking-wider text-red-400 backdrop-blur-md">
               {error}
@@ -134,7 +203,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`${spaceGrotesk.className} group w-full mt-6 flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 py-3.5 text-white text-sm font-bold uppercase tracking-widest transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60`}
+            className={`${spaceGrotesk.className} group w-full mt-6 flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 py-3.5 min-h-[44px] lg:min-h-0 text-white text-sm font-bold uppercase tracking-widest transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60`}
           >
             {isSubmitting ? "Creating" : "Create Account"}
             <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />

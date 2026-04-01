@@ -12,7 +12,7 @@ from security import ALGORITHM, SECRET_KEY, hash_password
 
 router = APIRouter()
 RESET_TOKEN_EXPIRE_MINUTES = int(os.getenv("RESET_TOKEN_EXPIRE_MINUTES", "30"))
-FRONTEND_BASE_URL = os.getenv("FRONTEND_BASE_URL", "http://localhost:3001")
+FRONTEND_BASE_URL = os.getenv("FRONTEND_BASE_URL", "http://localhost:3000")
 
 MAIL_CONFIG = ConnectionConfig(
     MAIL_USERNAME=os.getenv("MAIL_USERNAME", ""),
@@ -75,7 +75,7 @@ async def request_password_reset(request: ForgotPasswordRequest) -> dict[str, st
             )
 
     token = create_reset_token(email, password_version)
-    print(f"DEBUG: Sending email to {email} with token {token}")
+
 
     # Always respond with success to avoid account enumeration
     if user:

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, Suspense, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
@@ -24,10 +24,18 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500", "600"],
 });
 
-const resetEndpoint = "http://localhost:8001/auth/reset-password-confirm";
+const resetEndpoint = `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"}/auth/reset-password-confirm`;
 const successMessage = "Password Changed!";
 
-export default function ResetPasswordPage() {
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#0a0a16]" />}>
+      <ResetPasswordForm />
+    </Suspense>
+  );
+}
+
+function ResetPasswordForm() {
   const router = useRouter();
   const params = useSearchParams();
   const token = (params.get("token") ?? "").trim();
@@ -171,7 +179,7 @@ export default function ResetPasswordPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`${spaceGrotesk.className} w-full mt-6 flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 py-3.5 text-white text-sm font-bold uppercase tracking-widest transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60`}
+            className={`${spaceGrotesk.className} w-full mt-6 flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 py-3.5 min-h-[44px] lg:min-h-0 text-white text-sm font-bold uppercase tracking-widest transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60`}
           >
             <LockKeyhole className="h-5 w-5" />
             {isSubmitting ? "Updating" : "Update Password"}

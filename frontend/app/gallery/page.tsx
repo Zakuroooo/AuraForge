@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { isAxiosError } from "axios";
@@ -56,7 +56,11 @@ function GalleryImageCard({
   useEffect(() => {
     setIsSaved(Boolean(image.isSaved ?? image.is_saved));
   }, [image.isSaved, image.is_saved]);
+  const isSharingRef = useRef(false);
   const handleShare = async (imageUrl: string, promptText: string) => {
+    if (isSharingRef.current) return;
+    isSharingRef.current = true;
+
     const shareUrl =
       window.location.origin +
       (imageUrl.startsWith("/") ? imageUrl : `/${imageUrl}`);
@@ -78,6 +82,8 @@ function GalleryImageCard({
         if (err instanceof Error && err.name !== "AbortError") {
           console.error("Share API failed:", err);
         }
+      } finally {
+        isSharingRef.current = false;
       }
     }
 
@@ -86,6 +92,8 @@ function GalleryImageCard({
       setNotification("ACCESS_GRANTED // LINK_COPIED_TO_CLPBRD");
     } catch (clipErr) {
       console.error("Clipboard failed:", clipErr);
+    } finally {
+      isSharingRef.current = false;
     }
   };
 
@@ -103,7 +111,7 @@ function GalleryImageCard({
           event.stopPropagation();
           onDelete(image.id);
         }}
-        className="absolute top-2 right-2 z-20 p-3 opacity-0 hover:opacity-100 hover:bg-red-500/20 hover:backdrop-blur-md border border-transparent hover:border-red-500/50 text-transparent hover:text-red-500 hover:shadow-[0_0_15px_rgba(239,68,68,0.5)] cursor-pointer transition-all duration-200 rounded-md"
+        className="absolute top-2 right-2 z-20 p-3 opacity-50 lg:opacity-0 lg:group-hover:opacity-100 hover:bg-red-500/20 hover:backdrop-blur-md border border-transparent hover:border-red-500/50 text-red-500 lg:text-transparent hover:text-red-500 hover:shadow-[0_0_15px_rgba(239,68,68,0.5)] cursor-pointer transition-all duration-200 rounded-md"
         aria-label="Delete image"
       >
         <X className="h-4 w-4" />
@@ -151,7 +159,7 @@ function GalleryImageCard({
             minute: "2-digit",
           })}
         </p>
-        <div className="flex flex-wrap gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">
+        <div className="flex flex-wrap gap-3 opacity-50 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300 translate-y-0 lg:translate-y-4 lg:group-hover:translate-y-0">
           <button
             type="button"
             onClick={() => onDownload(image)}
@@ -203,6 +211,7 @@ export default function GalleryPage() {
   const [copySuccess, setCopySuccess] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
   const [imageToPurge, setImageToPurge] = useState<string | null>(null);
+  const promptInputRef = useRef<HTMLInputElement>(null);
   const fallbackImage =
     "https://images.unsplash.com/photo-1620641788415-199f1c6c6694?w=800";
 
@@ -392,16 +401,16 @@ export default function GalleryPage() {
     <main className="relative min-h-screen overflow-hidden bg-[#0a0a16] px-6 py-12 text-white font-sans">
       <AuroraBackground />
       <BackgroundBeams />
-      <div className="pointer-events-none absolute left-6 top-6 text-[10px] font-mono uppercase tracking-widest text-cyan-400/50">
+      <div className="pointer-events-none absolute left-6 top-6 text-[10px] font-mono uppercase tracking-widest text-cyan-400/50 whitespace-normal break-all max-w-[80vw] lg:max-w-none lg:whitespace-nowrap lg:break-normal">
         // SYS.ASSET_FORGE :: ACTIVE_CHANNEL_01
       </div>
       <div className="pointer-events-none absolute right-6 top-8 text-[10px] font-mono uppercase tracking-widest text-cyan-400/40">
         // GRID.SYNC :: HOLO_LAYER_ENABLED
       </div>
       <div className="pointer-events-none absolute bottom-0 left-0 h-[50vh] w-full origin-bottom bg-[linear-gradient(to_right,#22d3ee15_1px,transparent_1px),linear-gradient(to_bottom,#22d3ee15_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:linear-gradient(to_bottom,transparent,black)] [transform:perspective(1000px)_rotateX(60deg)_translateZ(0)]" />
-      <div className="relative z-10 mx-auto flex w-full max-w-[1700px] flex-col gap-10 lg:flex-row px-10">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1700px] flex-col gap-10 lg:flex-row px-4 lg:px-10">
         <section className="w-full lg:sticky lg:top-10 lg:max-h-[calc(100vh-5rem)] lg:w-[380px] lg:pr-8">
-          <div className="rounded-3xl border-r border-white/[0.05] bg-white/[0.02] p-8 backdrop-blur-xl">
+          <div className="rounded-3xl border-r border-white/[0.05] bg-white/[0.02] p-4 lg:p-8 backdrop-blur-xl">
             <p className="flex items-center gap-3 text-sm font-sans text-white tracking-tight">
               <Sparkles className="h-5 w-5 text-cyan-400/80" /> Generator Panel
             </p>
@@ -501,10 +510,36 @@ export default function GalleryPage() {
               ))}
             </div>
           ) : sortedImages.length === 0 ? (
-            <div className="mt-10 flex flex-col items-center gap-4 rounded-3xl border border-dashed border-white/20 bg-black/20 px-8 py-16 text-center">
-              <Sparkles className="h-10 w-10 text-[#73ffdf]" />
-              <h4 className="text-xl font-semibold">No visions forged yet.</h4>
-              <p className="text-sm text-white/70">Start creating above! ✨</p>
+            <div className="mt-10 relative">
+              {/* Ghost cards behind — hint at a filled gallery */}
+              <div className="grid grid-cols-1 gap-6 px-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 opacity-30 blur-sm pointer-events-none select-none">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div
+                    key={`ghost-${i}`}
+                    className="h-56 w-full rounded-2xl border border-white/10 bg-white/5"
+                  />
+                ))}
+              </div>
+              {/* Empty state overlay */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-center px-8">
+                <Sparkles className="h-12 w-12 text-cyan-400 animate-pulse" />
+                <h4 className="font-mono text-lg text-white/80 uppercase tracking-widest">
+                  VAULT_EMPTY // NO_VISIONS_FORGED
+                </h4>
+                <p className="font-mono text-xs text-white/40 tracking-wider">
+                  Initialize your first forge to populate the grid.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => promptInputRef.current?.focus()}
+                  className="mt-2 flex items-center gap-2 rounded-sm bg-gradient-to-r from-cyan-400 to-purple-600 px-6 py-2.5 text-white text-[10px] font-bold uppercase tracking-[0.2em] transition-all hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:scale-105"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+                  </svg>
+                  INITIALIZE_FIRST_FORGE
+                </button>
+              </div>
             </div>
           ) : (
             <div className="mt-10 w-full grid grid-cols-1 gap-6 px-4 pb-[200px] md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -524,22 +559,23 @@ export default function GalleryPage() {
         </section>
       </div>
 
-      <div className="fixed bottom-12 left-1/2 z-[100] w-full max-w-2xl -translate-x-1/2 px-4">
-        <div className="relative flex items-center gap-2 rounded-sm border-t-2 border-cyan-500/40 bg-[#05050A]/90 p-3 backdrop-blur-2xl shadow-[0_0_60px_rgba(0,0,0,0.6)]">
+      <div className="fixed bottom-4 lg:bottom-12 left-1/2 z-[100] w-full max-w-2xl -translate-x-1/2 px-4">
+        <div className="relative flex flex-col lg:flex-row items-stretch lg:items-center gap-2 rounded-sm border-t-2 border-cyan-500/40 bg-[#05050A]/90 p-3 backdrop-blur-2xl shadow-[0_0_60px_rgba(0,0,0,0.6)]">
           <span className="pointer-events-none absolute left-3 top-3 h-2 w-2 border-l border-t border-cyan-400/60" />
           <span className="pointer-events-none absolute right-3 top-3 h-2 w-2 border-r border-t border-cyan-400/60" />
           <span className="pointer-events-none absolute left-3 bottom-3 h-2 w-2 border-l border-b border-cyan-400/30" />
           <span className="pointer-events-none absolute right-3 bottom-3 h-2 w-2 border-r border-b border-cyan-400/30" />
           <input
+            ref={promptInputRef}
             value={promptText}
             onChange={(event) => setPromptText(event.target.value)}
             placeholder="Enter cinematic prompt..."
-            className="flex-grow bg-transparent p-3 text-white/80 text-sm font-medium tracking-tight focus:outline-none placeholder:text-white/40"
+            className="flex-grow w-full bg-transparent p-3 text-white/80 text-sm font-medium tracking-tight focus:outline-none placeholder:text-white/40"
           />
           <button
             type="button"
             onClick={handleEnhancePrompt}
-            className="rounded-sm border border-cyan-400/30 px-4 py-2 text-xs uppercase tracking-wider text-cyan-200/80 transition hover:border-cyan-300 hover:text-cyan-200"
+            className="rounded-sm border border-cyan-400/30 px-4 py-2 min-h-[44px] lg:min-h-0 text-xs uppercase tracking-wider text-cyan-200/80 transition hover:border-cyan-300 hover:text-cyan-200 w-full lg:w-auto"
           >
             Enhance
           </button>
@@ -547,7 +583,7 @@ export default function GalleryPage() {
             type="button"
             onClick={handleGenerate}
             disabled={isGenerating}
-            className="flex items-center gap-2 rounded-sm bg-gradient-to-r from-cyan-400 to-purple-600 px-6 py-2.5 text-white text-[10px] font-bold uppercase tracking-[0.2em] transition-all hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex items-center justify-center gap-2 rounded-sm bg-gradient-to-r from-cyan-400 to-purple-600 px-6 py-2.5 min-h-[44px] lg:min-h-0 text-white text-xs lg:text-[10px] font-bold uppercase tracking-[0.2em] transition-all hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60 w-full lg:w-auto"
           >
             <svg
               width="20"
@@ -724,7 +760,7 @@ export default function GalleryPage() {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 50 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="fixed bottom-24 left-8 z-[100] backdrop-blur-2xl bg-[#05050A]/90 border-l-4 border-cyan-500/60 rounded-sm p-4 flex items-center shadow-[0_0_60px_rgba(0,0,0,0.6)] gap-3"
+          className="fixed bottom-24 left-4 lg:left-8 z-[100] max-w-[calc(100vw-2rem)] backdrop-blur-2xl bg-[#05050A]/90 border-l-4 border-cyan-500/60 rounded-sm p-4 flex items-center shadow-[0_0_60px_rgba(0,0,0,0.6)] gap-3"
         >
           <div className="w-8 h-8 rounded-full border border-cyan-500/20 bg-cyan-500/5 flex items-center justify-center">
             <svg

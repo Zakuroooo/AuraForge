@@ -1,4 +1,9 @@
+from contextlib import asynccontextmanager
+from dotenv import load_dotenv
+load_dotenv()
+
 import os
+
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,9 +12,17 @@ from routers.auth import router as auth_router
 from routers.gallery import router as gallery_router
 from routers.auth_recovery import router as auth_recovery_router
 from routers.users import router as users_router
+from database import database
 
 
-app = FastAPI(title="AuraForge Pro API")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Create TTL index on password_resets so expired tokens are auto-deleted by MongoDB
+    await database["password_resets"].create_index("expires_at", expireAfterSeconds=0)
+    yield
+
+
+app = FastAPI(title="AuraForge Pro API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

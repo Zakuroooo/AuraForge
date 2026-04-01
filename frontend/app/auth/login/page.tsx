@@ -5,6 +5,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { Eye, EyeOff } from "lucide-react";
 import Cookies from "js-cookie";
 import BackgroundBeams from "@/components/BackgroundBeams";
 import api from "@/lib/api";
@@ -34,6 +35,7 @@ export default function LoginPage() {
   });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -51,6 +53,7 @@ export default function LoginPage() {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       });
       Cookies.set("token", response.data.access_token, { expires: 7 });
+      localStorage.setItem("token", response.data.access_token);
       router.push("/gallery");
     } catch (err: unknown) {
       const message =
@@ -126,12 +129,20 @@ export default function LoginPage() {
             <div className="relative">
               <input
                 required
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={credentials.password}
                 onChange={handleChange("password")}
                 placeholder="••••••••"
-                className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white placeholder-gray-600 outline-none transition-all duration-300 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-cyan-500/30 focus:shadow-[0_0_20px_rgba(34,211,238,0.2)] focus:bg-black/80"
+                className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 pr-10 text-white placeholder-gray-600 outline-none transition-all duration-300 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-cyan-500/30 focus:shadow-[0_0_20px_rgba(34,211,238,0.2)] focus:bg-black/80"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-cyan-400 transition-colors"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
               <span className="pointer-events-none absolute inset-0 rounded-xl border border-white/5 opacity-0 blur-xl transition group-focus-within:opacity-100" />
             </div>
             <div className="text-right text-xs text-white/50">
@@ -153,7 +164,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`${spaceGrotesk.className} w-full mt-6 flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 py-3.5 text-white text-sm font-bold uppercase tracking-widest transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60`}
+            className={`${spaceGrotesk.className} w-full mt-6 flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 py-3.5 min-h-[44px] lg:min-h-0 text-white text-sm font-bold uppercase tracking-widest transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60`}
           >
             {isSubmitting ? "Connecting" : "Initialize Session"}
           </button>
