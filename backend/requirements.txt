@@ -8,3 +8,4 @@ email-validator
 passlib[bcrypt]
 python-jose[cryptography]
 python-multipart
+certifi==2026.2.25
